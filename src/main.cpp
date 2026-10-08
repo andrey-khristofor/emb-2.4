@@ -35,8 +35,8 @@
 
 // bool isButtonPressed = false;
 
-// volatile int pressCount = 0;
-// volatile long lastPress = 0;
+// int pressCount = 0;
+// long lastPressMs = 0;
 // volatile bool isPressedTrigger = false;
 
 // IRAM_ATTR void handleClick()
@@ -56,21 +56,15 @@
 // {
 //   if (isPressedTrigger)
 //   {
-//     if (digitalRead(BUTTON_PIN) == HIGH && !isButtonPressed)
+//     isPressedTrigger = false;
+//     long now = millis();
+
+//     if (now - lastPressMs > DEBOUNCE)
 //     {
-//       isButtonPressed = true;
-
+//       lastPressMs = now;
 //       pressCount++;
-
 //       Serial.println(pressCount);
 //     }
-
-//     isPressedTrigger = false;
-//   }
-
-//   if (isButtonPressed && digitalRead(BUTTON_PIN) == LOW)
-//   {
-//     isButtonPressed = false;
 //   }
 // }
 
@@ -150,65 +144,65 @@
 
 // -------------------- TASK 4 --------------------
 
-#include <Arduino.h>
+// #include <Arduino.h>
 
-constexpr uint8_t BUTTON_PIN = 6;
-constexpr int POLLING_TIMEOUT_MS = 5;
-constexpr int STATES_TO_CONFIRM_COUNT = 4;
+// constexpr uint8_t BUTTON_PIN = 6;
+// constexpr int POLLING_TIMEOUT_MS = 5;
+// constexpr int STATES_TO_CONFIRM_COUNT = 4;
 
-enum ButtonState
-{
-  RELEASED,
-  PRESSED
-};
+// enum ButtonState
+// {
+//   RELEASED,
+//   PRESSED
+// };
 
-ButtonState state = ButtonState::RELEASED;
-int pressCount = 0;
+// ButtonState state = ButtonState::RELEASED;
+// int pressCount = 0;
 
-long lastPollingTimeMs = 0;
+// long lastPollingTimeMs = 0;
 
-int differentStatesCount = 0;
+// int differentStatesCount = 0;
 
-void handleButtonEvent();
+// void handleButtonEvent();
 
-void setup()
-{
-  Serial.begin(115200);
+// void setup()
+// {
+//   Serial.begin(115200);
 
-  pinMode(BUTTON_PIN, INPUT_PULLDOWN);
-}
+//   pinMode(BUTTON_PIN, INPUT_PULLDOWN);
+// }
 
-void loop()
-{
-  long now = millis();
+// void loop()
+// {
+//   long now = millis();
 
-  if (now - lastPollingTimeMs > POLLING_TIMEOUT_MS)
-  {
-    lastPollingTimeMs = now;
-    handleButtonEvent();
-  }
-}
+//   if (now - lastPollingTimeMs > POLLING_TIMEOUT_MS)
+//   {
+//     lastPollingTimeMs = now;
+//     handleButtonEvent();
+//   }
+// }
 
-void handleButtonEvent()
-{
-  bool currentState = digitalRead(BUTTON_PIN) == HIGH;
-  bool stableState = state == ButtonState::PRESSED;
+// void handleButtonEvent()
+// {
+//   bool currentState = digitalRead(BUTTON_PIN) == HIGH;
+//   bool stableState = state == ButtonState::PRESSED;
 
-  if (currentState == stableState)
-  {
-    differentStatesCount = 0;
-    return;
-  }
+//   if (currentState == stableState)
+//   {
+//     differentStatesCount = 0;
+//     return;
+//   }
 
-  differentStatesCount++;
+//   differentStatesCount++;
 
-  if (differentStatesCount > STATES_TO_CONFIRM_COUNT)
-  {
-    state = currentState ? ButtonState::PRESSED : ButtonState::RELEASED;
-    if (currentState)
-    {
-      pressCount++;
-      Serial.println(pressCount);
-    }
-  }
-}
+//   if (differentStatesCount > STATES_TO_CONFIRM_COUNT)
+//   {
+//     state = currentState ? ButtonState::PRESSED : ButtonState::RELEASED;
+//     if (currentState)
+//     {
+//       pressCount++;
+//       Serial.println(pressCount);
+//     }
+//   }
+// }
